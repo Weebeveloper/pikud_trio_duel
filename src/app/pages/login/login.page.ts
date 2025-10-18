@@ -3,22 +3,34 @@ import { Router } from '@angular/router';
 import { MockAdapter } from '../api/mock/mock-adapter';
 import { AuthService } from 'src/app/shared/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'pages-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPageComponent implements OnInit {
-  email = '';
-  password = '';
-  errorMessage = '';
+  readonly errorMessage$ = new BehaviorSubject<string>('');
+  readonly isLoading$ = new BehaviorSubject<boolean>(false);
+
+  hidePassword = true;
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
+  }
+
+  readonly filters = this._fb.group({
+    name: ['', Validators.required],
+    password: ['', Validators.required],
+  });
 
   constructor(
     private readonly _authService: AuthService,
     private readonly _router: Router,
-    private readonly _http: HttpClient
+    private readonly _http: HttpClient,
+    private readonly _fb: FormBuilder
   ) {}
 
   ngOnInit() {
@@ -44,8 +56,13 @@ export class LoginPageComponent implements OnInit {
   }
 
   onSubmit() {
+    this.isLoading$.next(true);
+
     this._authService
-      .login(this.email.trim().toLocaleLowerCase(), this.password.trim())
+      .login(
+        this.filters.controls.name.value!.trim().toLocaleLowerCase(),
+        this.filters.controls.password.value!.trim()
+      )
       .subscribe({
         next: (res) => {
           localStorage.setItem('userId', JSON.stringify(res.userId));
@@ -54,7 +71,8 @@ export class LoginPageComponent implements OnInit {
           this._router.navigateByUrl('home');
         },
         error: (err) => {
-          this.errorMessage = 'Invalid email or password';
+          this.errorMessage$.next('Invalid email or password');
+          this.isLoading$.next(false);
         },
       });
   }

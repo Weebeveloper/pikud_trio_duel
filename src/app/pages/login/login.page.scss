@@ -1,0 +1,138 @@
+.page__container {
+  height: 100%;
+  width: 100%;
+  overflow-y: hidden;
+  user-select: none;
+
+  .cover {
+    height: 50%;
+    width: 100%;
+    background-color: #1c2120;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image: url("/assets/images/controller.png");
+    background-color: cover;
+
+    &__logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      width: 30%;
+      margin-top: -30%;
+
+      aspect-ratio: 1;
+      text-align: center;
+      border-radius: 20px;
+
+      color: #777777;
+      font-weight: 800;
+      font-size: 4rem;
+      background-color: white;
+    }
+  }
+
+  .details {
+    margin-top: -30%;
+    height: 60%;
+    width: 100%;
+    border-top-right-radius: 70px;
+    background-color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    &__titles {
+      font-weight: 700;
+      font-size: 3rem;
+      text-align: center;
+      margin-top: 0.5em;
+
+      &__title {
+        display: block;
+        color: rgb(37, 36, 36);
+      }
+    }
+
+    &__sentence {
+      width: 45%;
+      text-align: center;
+
+      color: rgb(138, 138, 138);
+      letter-spacing: 0.1rem;
+      font-weight: 400;
+      font-size: 1rem;
+    }
+
+    &__form {
+      width: 70%;
+      height: 50%;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.5em;
+
+      &__field {
+        width: 100%;
+        border-radius: 20px;
+      }
+
+      &__password {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5em;
+        position: relative;
+
+        &__icon {
+          right: 0;
+          top: 7px;
+          position: absolute;
+        }
+      }
+
+      &__button {
+        width: 90%;
+        height: 3.5em;
+        border-radius: 5px;
+
+        background-color: #1c2120;
+        color: white;
+      }
+    }
+
+    &__error__message {
+      height: 1em;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+  }
+
+  .loading {
+    margin-top: -30%;
+    height: 60%;
+    width: 100%;
+    border-top-right-radius: 70px;
+    background-color: white;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__spinner {
+      &::ng-deep {
+        circle {
+          stroke: black;
+        }
+      }
+    }
+  }
+}
