@@ -1,0 +1,32 @@
+<div class="page__container">
+  <button mat-button (click)="returnToHome()" class="return__button"><</button>
+  <div class="map-container">
+    <div id="map"></div>
+  </div>
+  <div class="details" *ngIf="currentUser$ | async as user">
+    <div class="details__image__container">
+      <img [src]="user.image" alt="user image" class="details__image" />
+    </div>
+    <span class="details__name">{{ user.name }}</span>
+
+    <footer>
+      <div class="buttons__row">
+        <button
+          mat-button
+          class="buttons__row__call"
+          (click)="call(user.phoneNumber)"
+        >
+          <mat-icon class="buttons__row__call__icon">call</mat-icon>
+        </button>
+        <button
+          mat-button
+          class="buttons__row__message"
+          (click)="message(user.phoneNumber)"
+        >
+          <mat-icon class="buttons__row__message__icon">mail</mat-icon>
+          <span class="buttons__row__message__text">Send message</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+</div>
