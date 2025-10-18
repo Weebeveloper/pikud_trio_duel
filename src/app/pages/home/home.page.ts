@@ -18,6 +18,7 @@ export class HomePageComponent implements OnInit {
   readonly allUsers$ = this._adapter.getAllUsers(this._currnetUserID);
 
   readonly hasLocationPremission$ = new BehaviorSubject<boolean>(true);
+  readonly hasNotificationsPremission$ = new BehaviorSubject<boolean>(true);
 
   constructor(
     private readonly _router: Router,
@@ -38,6 +39,8 @@ export class HomePageComponent implements OnInit {
         maximumAge: 0,
       }
     );
+
+    this.askForNotificationsPremission();
   }
 
   expnadPersonalDetails(userId: string) {
@@ -56,6 +59,13 @@ export class HomePageComponent implements OnInit {
         maximumAge: 0,
       }
     );
+  }
+
+  async askForNotificationsPremission() {
+    const notificationPremission = await Notification.requestPermission();
+    if (notificationPremission !== 'granted')
+      this.hasNotificationsPremission$.next(false);
+    else this.hasNotificationsPremission$.next(true);
   }
 
   getDistance(userLatitude: number, userLongtitude: number) {

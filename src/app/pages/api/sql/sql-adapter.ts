@@ -63,4 +63,8 @@ export class SQLAdapter {
       })
     );
   }
+
+  subscribe(pushSubscription: PushSubscription) {
+    return this._http.post(`${this.baseUrl}/subscribe`, pushSubscription);
+  }
 }
