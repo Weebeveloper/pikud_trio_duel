@@ -64,7 +64,22 @@ export class SQLAdapter {
     );
   }
 
-  subscribe(pushSubscription: PushSubscription) {
-    return this._http.post(`${this.baseUrl}/subscribe`, pushSubscription);
+  subscribe(pushSubscription: PushSubscription, userId: string) {
+    return this._http
+      .post(`${this.baseUrl}/subscribe`, {
+        subscription: pushSubscription,
+        userId: userId,
+      })
+      .toPromise();
+  }
+
+  sendNotification(payload: {
+    targetUserId: string;
+    title: string;
+    message: string;
+  }) {
+    return this._http
+      .post(`${this.baseUrl}/sendNotification`, payload)
+      .toPromise();
   }
 }

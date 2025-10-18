@@ -40,6 +40,8 @@ export class HomePageComponent implements OnInit {
       }
     );
 
+    this._setupNotificationsService();
+
     this.askForNotificationsPremission();
   }
 
@@ -65,7 +67,9 @@ export class HomePageComponent implements OnInit {
     const notificationPremission = await Notification.requestPermission();
     if (notificationPremission !== 'granted')
       this.hasNotificationsPremission$.next(false);
-    else this.hasNotificationsPremission$.next(true);
+    else {
+      this.hasNotificationsPremission$.next(true);
+    }
   }
 
   getDistance(userLatitude: number, userLongtitude: number) {
@@ -96,5 +100,21 @@ export class HomePageComponent implements OnInit {
       longtitude: position.coords.longitude,
     };
     this.hasLocationPremission$.next(true);
+  }
+
+  private async _setupNotificationsService() {
+    const swRegistration = await navigator.serviceWorker.register(
+      '../../../sw.js'
+    );
+
+    let sw = await navigator.serviceWorker.ready;
+
+    let pushSubscription = await sw.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey:
+        'BOn4_tyuY4HYoFB5kyM_352AlN-eOnWD1WjPIfHczqvXTWCA_ByNT3c-Xkz_nXp0D47CAcKsALGT9-6btwJDbco',
+    });
+
+    await this._adapter.subscribe(pushSubscription, this._currnetUserID);
   }
 }

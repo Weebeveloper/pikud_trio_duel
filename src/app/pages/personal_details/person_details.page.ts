@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as L from 'leaflet';
 import { SQLAdapter } from '../api/sql/sql-adapter';
 import { PersonModel } from 'src/app/shared/models';
-import { SwPush } from '@angular/service-worker';
 
 @Component({
   selector: 'pages-person_details',
@@ -15,10 +14,8 @@ import { SwPush } from '@angular/service-worker';
 export class PersonDetailsPageComponent implements OnInit {
   private _map!: any;
 
-  readonly KEY =
-    'BOn4_tyuY4HYoFB5kyM_352AlN-eOnWD1WjPIfHczqvXTWCA_ByNT3c-Xkz_nXp0D47CAcKsALGT9-6btwJDbco';
-
   private readonly _currentUserId$ = new ReplaySubject<string>(1);
+  _curretUserIdForNotif!: string;
   readonly currentUser$ = this._currentUserId$.pipe(
     switchMap((id) => this._adapter.getUserById(id)),
     tap((user) => this._initMap(user.location))
@@ -27,13 +24,14 @@ export class PersonDetailsPageComponent implements OnInit {
   ngOnInit(): void {
     this._route.fragment.subscribe((fragment) => {
       this._currentUserId$.next(fragment!);
+      this._curretUserIdForNotif = fragment!;
     });
   }
 
   constructor(
     private readonly _route: ActivatedRoute,
     private readonly _router: Router,
-    private readonly _adapter: SQLAdapter // private readonly _swPush: SwPush
+    private readonly _adapter: SQLAdapter
   ) {}
 
   returnToHome() {
@@ -48,61 +46,19 @@ export class PersonDetailsPageComponent implements OnInit {
     window.location.href = `https://wa.me/${phoneNumber}`;
   }
 
-  trioDuel(user: PersonModel) {
-    this.subscribeToNotifications();
+  async trioDuel(user: PersonModel) {
+    try {
+      let sw = await navigator.serviceWorker.ready;
+
+      await this._adapter.sendNotification({
+        targetUserId: this._curretUserIdForNotif,
+        title: 'Hello!',
+        message: 'You are successfully subscribed!',
+      });
+    } catch (err) {
+      console.error('servie worker registration failed:', err);
+    }
   }
-
-  subscribeToNotifications() {
-    // this._swPush
-    //   .requestSubscription({
-    //     serverPublicKey: this.KEY,
-    //   })
-    //   .then((sub) => {
-    //     return this._adapter.subscribe(sub);
-    //   })
-    //   .then(() => alert('subscribed for push notifications!'))
-    //   .catch((err) => console.log('subscription failed', err));
-
-    Notification.requestPermission().then((perm) => {
-      if (perm === 'granted') {
-        new Notification('Example notification');
-      }
-    });
-  }
-
-  //? register sw, register push, send push
-  async send() {
-    // console.log('CLIENT: registering service worker');
-    // const register = await navigator.serviceWorker.register('worker.js', {
-    //   scope: '/',
-    // });
-    // console.log('CLIENT: service worker registered!');
-    // console.log('registering push...');
-    // const subscription = await register.pushManager.subscribe({
-    //   userVisibleOnly: true,
-    //   applicationServerKey: this._urlBase64ToUint8Array(this.KEY),
-    // });
-    // console.log('push registered!');
-    // console.log('sending push notification...');
-    // await fetch('/subscribe') {
-    //   m
-    // }
-  }
-
-  // private _urlBase64ToUint8Array(base64String: any) {
-  //   const padding = '='.repeat(((4 - base64String.length) & 4) % 4);
-  //   const base64 = (base64String + padding)
-  //     .replace(/\-/g, '+')
-  //     .replace(/_/g, '/');
-
-  //   const rawData = window.atob(base64);
-  //   const outputedArray = new Uint8Array(rawData.length);
-
-  //   for (let i = 0; i < rawData.length; i++) {
-  //     outputedArray[i] = rawData.charCodeAt(i);
-  //   }
-  //   return outputedArray;
-  // }
 
   private _initMap(location: { latitude: number; longtitude: number }) {
     const coordinates = [location.latitude, location.longtitude];
