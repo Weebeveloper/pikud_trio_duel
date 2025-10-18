@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of, tap } from 'rxjs';
+import { forkJoin, from, map, mergeMap, Observable, of, tap } from 'rxjs';
 import { PersonModel } from 'src/app/shared/models';
 import { environment } from 'src/environments/environment';
 
@@ -17,50 +17,50 @@ export class SQLAdapter {
 
     return this._http.get<any>(`${this.baseUrl}/userById`, { params }).pipe(
       map((res) => {
+        const blob = new Blob([new Uint8Array(res.image.data)], {
+          type: res.image.type || 'image/jpeg',
+        });
+        const imageUrl = URL.createObjectURL(blob);
+
         const user: PersonModel = {
           id: res.id,
           name: res.name,
           location: { latitude: res.latitude, longtitude: res.longtitude },
           phoneNumber: res.phone_number,
           backgroundColor: res.background_color,
-          image: `data:image/jpeg;base64,${this._bufferToBase64(res.image)}`,
+          image: imageUrl,
         };
+
         return user;
       })
     );
   }
 
-  getAllUsers(id: string): Observable<PersonModel[]> {
-    const params = new HttpParams().set('excludedId', id);
+  getAllUsers(excludedId: string): Observable<PersonModel[]> {
+    const params = new HttpParams().set('excludedId', excludedId);
 
     return this._http.get<any[]>(`${this.baseUrl}/allUsers`, { params }).pipe(
-      map((users) =>
-        users.map((u) => {
+      mergeMap((users) => {
+        const userObservables = users.map((u) => {
+          const blob = new Blob([new Uint8Array(u.image.data)], {
+            type: u.image.type || 'image/jpeg',
+          });
+          const imageUrl = URL.createObjectURL(blob);
+
           const user: PersonModel = {
             id: u.id,
             name: u.name,
             location: { latitude: u.latitude, longtitude: u.longtitude },
             phoneNumber: u.phone_number,
             backgroundColor: u.background_color,
-            image: `data:image/jpeg;base64,${this._bufferToBase64(u.image)}`,
+            image: imageUrl,
           };
 
-          return user;
-        })
-      )
+          return from(Promise.resolve(user));
+        });
+
+        return forkJoin(userObservables);
+      })
     );
-  }
-
-  private _bufferToBase64(bufferObj: { type: string; data: number[] }): string {
-    const bytes = new Uint8Array(bufferObj.data);
-    let binary = '';
-    const chunkSize = 0x8000; // 32KB chunks
-
-    for (let i = 0; i < bytes.length; i += chunkSize) {
-      const chunk = bytes.subarray(i, i + chunkSize);
-      binary += String.fromCharCode.apply(null, chunk as unknown as number[]);
-    }
-
-    return btoa(binary);
   }
 }
