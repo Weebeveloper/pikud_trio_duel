@@ -43,11 +43,8 @@ export class PersonDetailsPageComponent implements OnInit {
     window.location.href = `https://wa.me/${phoneNumber}`;
   }
 
-  private _initMap(location: { latitude: string; longtitude: string }) {
-    const coordinates = [
-      Number(location.latitude),
-      Number(location.longtitude),
-    ];
+  private _initMap(location: { latitude: number; longtitude: number }) {
+    const coordinates = [location.latitude, location.longtitude];
 
     this._map = L.map('map', {
       center: [coordinates[0], coordinates[1]],

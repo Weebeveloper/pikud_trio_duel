@@ -1,7 +1,7 @@
 interface IPersonModelProperties {
   id: string;
   name: string;
-  location: { longtitude: string; latitude: string };
+  location: { longtitude: number; latitude: number };
   image: string;
   phoneNumber: string;
   backgroundColor?: string;
@@ -10,7 +10,7 @@ interface IPersonModelProperties {
 export class PersonModel implements IPersonModelProperties {
   id!: string;
   name!: string;
-  location!: { longtitude: string; latitude: string };
+  location!: { longtitude: number; latitude: number };
   image!: string;
   phoneNumber!: string;
   backgroundColor?: string = '#7793a7';

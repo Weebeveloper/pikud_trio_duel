@@ -117,7 +117,7 @@ export class MockAdapter {
     return of(
       new PersonModel({
         name: 'Jhon Black',
-        location: { latitude: '', longtitude: '' },
+        location: { latitude: 0, longtitude: 0 },
         image: 'https://via.placeholder.com/150',
         id: '2',
         phoneNumber: '0506477366',

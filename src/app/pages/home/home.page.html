@@ -1,18 +1,37 @@
-<div class="page__container" *ngIf="currentUser$ | async as currentUser">
-  <header class="current__user">
-    <span>Hello {{ currentUser.name }}</span>
-    <img [src]="currentUser.image" class="current__user__image" />
-  </header>
-  <div class="users">
-    <div
-      *ngFor="let user of allUsers$ | async"
-      class="user__info"
-      (click)="expnadPersonalDetails(user.id)"
-      [ngStyle]="{'--user-background-color': user.backgroundColor}"
-    >
-      <img [src]="user.image" alt="user image" class="user__image" />
-      <div class="user__name">{{ user.name }}</div>
-      <div class="user__location">{{ user.location }}</div>
+<ng-container *ngIf="hasLocationPremission$ | async; else doesntHaveLocation">
+  <div class="page__container" *ngIf="currentUser$ | async as currentUser">
+    <header class="current__user">
+      <span>Hello {{ currentUser.name }}</span>
+      <img [src]="currentUser.image" class="current__user__image" />
+    </header>
+    <div class="users">
+      <div
+        *ngFor="let user of allUsers$ | async"
+        class="user__info"
+        (click)="expnadPersonalDetails(user.id)"
+        [ngStyle]="{'--user-background-color': user.backgroundColor}"
+      >
+        <img [src]="user.image" alt="user image" class="user__image" />
+        <div class="user__name">{{ user.name }}</div>
+        <div class="user__location">
+          <span class="user__location__text">
+            {{ getDistance(currentUser.location.latitude,
+            currentUser.location.longtitude, user.location.latitude,
+            user.location.longtitude) | number:'1.0-1'}} KM
+          </span>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</ng-container>
+
+<ng-template #doesntHaveLocation>
+  <div class="no__location">
+    <div class="no__location__content">
+      <span class="no__location__content__text">מה אתה מסתיר??? תן מיקום</span>
+      <button mat-icon-button (click)="redirectToEnableLocation()">
+        <mat-icon class="no__location__content__icon">location_off</mat-icon>
+      </button>
+    </div>
+  </div>
+</ng-template>
