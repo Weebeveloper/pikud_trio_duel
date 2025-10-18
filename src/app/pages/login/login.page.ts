@@ -46,14 +46,10 @@ export class LoginPageComponent implements OnInit {
   onSubmit() {
     this._authService.login(this.email, this.password).subscribe({
       next: (res) => {
-        console.log('Full user details:', res.user);
-        console.log('Token:', res.token);
-
         localStorage.setItem('userId', JSON.stringify(res.userId));
         localStorage.setItem('token', res.token);
 
         this._router.navigateByUrl('home');
-        alert('Login successful!');
       },
       error: (err) => {
         this.errorMessage = 'Invalid email or password';
