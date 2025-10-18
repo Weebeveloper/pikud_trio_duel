@@ -103,9 +103,7 @@ export class HomePageComponent implements OnInit {
   }
 
   private async _setupNotificationsService() {
-    const swRegistration = await navigator.serviceWorker.register(
-      '../../../sw.js'
-    );
+    const swRegistration = await navigator.serviceWorker.register('/sw.js');
 
     let sw = await navigator.serviceWorker.ready;
 
