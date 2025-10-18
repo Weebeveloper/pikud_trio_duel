@@ -44,16 +44,18 @@ export class LoginPageComponent implements OnInit {
   }
 
   onSubmit() {
-    this._authService.login(this.email, this.password).subscribe({
-      next: (res) => {
-        localStorage.setItem('userId', JSON.stringify(res.userId));
-        localStorage.setItem('token', res.token);
+    this._authService
+      .login(this.email.trim().toLocaleLowerCase(), this.password.trim())
+      .subscribe({
+        next: (res) => {
+          localStorage.setItem('userId', JSON.stringify(res.userId));
+          localStorage.setItem('token', res.token);
 
-        this._router.navigateByUrl('home');
-      },
-      error: (err) => {
-        this.errorMessage = 'Invalid email or password';
-      },
-    });
+          this._router.navigateByUrl('home');
+        },
+        error: (err) => {
+          this.errorMessage = 'Invalid email or password';
+        },
+      });
   }
 }
