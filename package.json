@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open",
-    "build": "ng build",
+    "build": "ng build --configuration production --output-path docs --base-href /pikud_trio_duel/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
