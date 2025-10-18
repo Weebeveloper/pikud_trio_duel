@@ -52,9 +52,15 @@ export class SQLAdapter {
   }
 
   private _bufferToBase64(bufferObj: { type: string; data: number[] }): string {
-    const base64String = btoa(
-      String.fromCharCode(...new Uint8Array(bufferObj.data))
-    );
-    return base64String;
+    const bytes = new Uint8Array(bufferObj.data);
+    let binary = '';
+    const chunkSize = 0x8000; // 32KB chunks
+
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      const chunk = bytes.subarray(i, i + chunkSize);
+      binary += String.fromCharCode.apply(null, chunk as unknown as number[]);
+    }
+
+    return btoa(binary);
   }
 }
