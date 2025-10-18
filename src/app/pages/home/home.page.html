@@ -1,6 +1,9 @@
 <ng-container *ngIf="hasLocationPremission$ | async; else doesntHaveLocation">
   <div class="page__container" *ngIf="currentUser$ | async as currentUser">
-    <header class="current__user">
+    <header
+      class="current__user"
+      [ngStyle]="{'--user-background-color': currentUser.backgroundColor}"
+    >
       <span>Hello {{ currentUser.name }}</span>
       <img [src]="currentUser.image" class="current__user__image" />
     </header>
@@ -15,9 +18,8 @@
         <div class="user__name">{{ user.name }}</div>
         <div class="user__location">
           <span class="user__location__text">
-            {{ getDistance(currentUser.location.latitude,
-            currentUser.location.longtitude, user.location.latitude,
-            user.location.longtitude) | number:'1.0-1'}} KM
+            {{ getDistance(user.location.latitude, user.location.longtitude) |
+            number:'1.0-1'}} KM
           </span>
         </div>
       </div>

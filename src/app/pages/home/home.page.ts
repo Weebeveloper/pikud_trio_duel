@@ -58,12 +58,7 @@ export class HomePageComponent implements OnInit {
     );
   }
 
-  getDistance(
-    myLatitude: number,
-    myLongtitude: number,
-    userLatitude: number,
-    userLongtitude: number
-  ) {
+  getDistance(userLatitude: number, userLongtitude: number) {
     const R = 6371;
     const dLat = this._degreesToRadians(
       this._myLocation!.latitude - userLatitude
