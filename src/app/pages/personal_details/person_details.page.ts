@@ -5,6 +5,7 @@ import * as L from 'leaflet';
 import { SQLAdapter } from '../api/sql/sql-adapter';
 import { PersonModel } from 'src/app/shared/models';
 import { MatSliderDragEvent } from '@angular/material/slider';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'pages-person_details',
@@ -32,7 +33,8 @@ export class PersonDetailsPageComponent implements OnInit {
   constructor(
     private readonly _route: ActivatedRoute,
     private readonly _router: Router,
-    private readonly _adapter: SQLAdapter
+    private readonly _adapter: SQLAdapter,
+    private readonly _snackbar: MatSnackBar
   ) {}
 
   returnToHome() {
@@ -64,8 +66,16 @@ export class PersonDetailsPageComponent implements OnInit {
         title: 'Hello!',
         message: 'You are successfully subscribed!',
       });
+      this._snackbar.open('!ההודעה נשלחה בהצלחה', '', {
+        duration: 3000,
+        panelClass: ['center-snackbar'],
+      });
     } catch (err) {
       console.error('servie worker registration failed:', err);
+      this._snackbar.open('ההודעה נכשלה... נסה שוב', '', {
+        duration: 3000,
+        panelClass: ['center-snackbar'],
+      });
     }
   }
 
