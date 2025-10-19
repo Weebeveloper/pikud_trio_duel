@@ -1,17 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {
-  BehaviorSubject,
-  combineLatest,
-  combineLatestWith,
-  delay,
-  map,
-  of,
-  startWith,
-  tap,
-} from 'rxjs';
-import { PersonModel } from 'src/app/shared/models';
+import { BehaviorSubject, combineLatest, map, startWith } from 'rxjs';
 import { SQLAdapter } from '../api/sql/sql-adapter';
+import { TRIO_DUEL_TIME_PERIOD } from 'src/app/shared/global.vars';
 
 @Component({
   selector: 'pages-home',
@@ -33,6 +24,24 @@ export class HomePageComponent implements OnInit {
     map(() => false),
     startWith(true)
   );
+
+  readonly isUnderTrioDuel$ = this._adapter
+    .fetchLastNotificationTimestamp(this._currnetUserID)
+    .pipe(
+      map((timestamp) => {
+        const lastNotificationDate = new Date(
+          String(timestamp).replace(' ', 'T')
+        );
+
+        const periodMinutes = TRIO_DUEL_TIME_PERIOD;
+        const now = new Date();
+        const diffMinutes =
+          (now.getTime() - lastNotificationDate.getTime()) / 1000 / 60;
+        const isWithinWindow = diffMinutes <= periodMinutes;
+
+        return isWithinWindow;
+      })
+    );
 
   constructor(
     private readonly _router: Router,

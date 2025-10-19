@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ReplaySubject, switchMap, tap } from 'rxjs';
+import { map, ReplaySubject, switchMap, tap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as L from 'leaflet';
 import { SQLAdapter } from '../api/sql/sql-adapter';
 import { PersonModel } from 'src/app/shared/models';
 import { MatSliderDragEvent } from '@angular/material/slider';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TRIO_DUEL_TIME_PERIOD } from 'src/app/shared/global.vars';
 
 @Component({
   selector: 'pages-person_details',
@@ -21,6 +22,23 @@ export class PersonDetailsPageComponent implements OnInit {
   readonly currentUser$ = this._currentUserId$.pipe(
     switchMap((id) => this._adapter.getUserById(id)),
     tap((user) => this._initMap(user.location))
+  );
+
+  readonly isUnderTrioDuel$ = this._currentUserId$.pipe(
+    switchMap((id) => this._adapter.fetchLastNotificationTimestamp(id)),
+    map((timestamp) => {
+      const lastNotificationDate = new Date(
+        String(timestamp).replace(' ', 'T')
+      );
+
+      const periodMinutes = TRIO_DUEL_TIME_PERIOD;
+      const now = new Date();
+      const diffMinutes =
+        (now.getTime() - lastNotificationDate.getTime()) / 1000 / 60;
+      const isWithinWindow = diffMinutes <= periodMinutes;
+
+      return isWithinWindow;
+    })
   );
 
   ngOnInit(): void {
@@ -70,6 +88,8 @@ export class PersonDetailsPageComponent implements OnInit {
         duration: 3000,
         panelClass: ['center-snackbar'],
       });
+
+      this.returnToHome();
     } catch (err) {
       console.error('servie worker registration failed:', err);
       this._snackbar.open('ההודעה נכשלה... נסה שוב', '', {

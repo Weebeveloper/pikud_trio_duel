@@ -2,12 +2,21 @@
   <ng-container
     *ngIf="hasNotificationsPremission$ | async; else doesntHaveNotifications"
   >
-    <div class="page__container">
-      <header>
+    <div
+      class="page__container"
+      [ngClass]="{ 'page__container__alert' : isUnderTrioDuel$ | async }"
+    >
+      <div class="content">
         <div class="current__user">
           <ng-container *ngIf="!(isLoading$ | async)">
             <ng-container *ngIf="currentUser$ | async as currentUser">
-              <span class="welcome__back">Welcome Back</span>
+              <span
+                class="welcome__back"
+                [ngClass]="{ 'welcome__back__alert' : isUnderTrioDuel$ | async }"
+              >
+                {{ (isUnderTrioDuel$ | async) ? 'You are currently under
+                invasion' : 'Welcome Back' }}
+              </span>
               <div
                 class="current__user__details"
                 [ngStyle]="{'--user-background-color': currentUser.backgroundColor}"
@@ -24,22 +33,22 @@
             </ng-container>
           </ng-container>
         </div>
-      </header>
 
-      <div class="users" *ngIf="!(isLoading$ | async); else load">
-        <div
-          *ngFor="let user of allUsers$ | async"
-          class="user__info"
-          (click)="expnadPersonalDetails(user.id)"
-          [ngStyle]="{'--user-background-color': user.backgroundColor}"
-        >
-          <img [src]="user.image" alt="user image" class="user__image" />
-          <div class="user__name">{{ user.name }}</div>
-          <div class="user__location">
-            <span class="user__location__text">
-              {{ getDistance(user.location.latitude, user.location.longtitude) |
-              number:'1.0-1'}} KM
-            </span>
+        <div class="users" *ngIf="!(isLoading$ | async); else load">
+          <div
+            *ngFor="let user of allUsers$ | async"
+            class="user__info"
+            (click)="expnadPersonalDetails(user.id)"
+            [ngStyle]="{'--user-background-color': user.backgroundColor}"
+          >
+            <img [src]="user.image" alt="user image" class="user__image" />
+            <div class="user__name">{{ user.name }}</div>
+            <div class="user__location">
+              <span class="user__location__text">
+                {{ getDistance(user.location.latitude, user.location.longtitude)
+                | number:'1.0-1'}} KM
+              </span>
+            </div>
           </div>
         </div>
       </div>

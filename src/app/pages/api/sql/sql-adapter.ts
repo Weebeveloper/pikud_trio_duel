@@ -1,6 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { forkJoin, from, map, mergeMap, Observable, of, tap } from 'rxjs';
+import {
+  forkJoin,
+  from,
+  map,
+  mergeMap,
+  Observable,
+  of,
+  tap,
+  Timestamp,
+} from 'rxjs';
 import { PersonModel } from 'src/app/shared/models';
 import { environment } from 'src/environments/environment';
 
@@ -81,5 +90,14 @@ export class SQLAdapter {
     return this._http
       .post(`${this.baseUrl}/sendNotification`, payload)
       .toPromise();
+  }
+
+  fetchLastNotificationTimestamp(userId: string): Observable<Date> {
+    const params = new HttpParams().set('userId', userId);
+    return this._http
+      .get<any>(`${this.baseUrl}/lastNotificationTimestamp`, {
+        params,
+      })
+      .pipe(map((d) => d.lastNotificationTimestamp));
   }
 }

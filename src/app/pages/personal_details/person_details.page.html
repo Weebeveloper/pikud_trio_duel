@@ -1,4 +1,7 @@
-<div class="page__container">
+<div
+  class="page__container"
+  [ngClass]="{ 'page__container__alert' : isUnderTrioDuel$ | async }"
+>
   <button mat-button (click)="returnToHome()" class="return__button"><</button>
   <div class="map-container">
     <div id="map"></div>
@@ -8,28 +11,34 @@
       <img [src]="user.image" alt="user image" class="details__image" />
     </div>
     <span class="details__name">{{ user.name }}</span>
-    <div
-      class="details__trio__duel"
-      [ngStyle]="{'--shade-color-1': enableCallTrigger ? 'rgba(0,0,0,0)' : 'rgba(16,16,16,0.44)',
-      '--shade-color-2': enableCallTrigger ? 'rgba(0,0,0,0)' : 'rgba(27,27,27,0.14)'}"
-    >
-      <button
-        mat-flat-button
-        (click)="trioDuel(user)"
-        class="details__trio__duel__button"
-        [disabled]="!enableCallTrigger"
-      >
-        TRIO DUEL!
-      </button>
-    </div>
 
-    <mat-slider
-      max="100"
-      class="details__slider"
-      (input)="sliderDragged($event)"
-    >
-      <input matSliderThumb />
-    </mat-slider>
+    <ng-container *ngIf="!(isUnderTrioDuel$ | async); else underTrioDuel">
+      <div
+        class="details__trio__duel"
+        [ngStyle]="{'--shade-color-1': enableCallTrigger ? 'rgba(0,0,0,0)' : 'rgba(16,16,16,0.44)',
+        '--shade-color-2': enableCallTrigger ? 'rgba(0,0,0,0)' : 'rgba(27,27,27,0.14)'}"
+      >
+        <button
+          mat-flat-button
+          (click)="trioDuel(user)"
+          class="details__trio__duel__button"
+          [disabled]="!enableCallTrigger"
+        >
+          TRIO DUEL!
+        </button>
+      </div>
+
+      <mat-slider
+        max="100"
+        class="details__slider"
+        (input)="sliderDragged($event)"
+      >
+        <input matSliderThumb />
+      </mat-slider>
+    </ng-container>
+    <ng-template #underTrioDuel>
+      <div class="under__trioduel">Currently under Trio Duel</div>
+    </ng-template>
 
     <footer>
       <div class="buttons__row">
