@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as L from 'leaflet';
 import { SQLAdapter } from '../api/sql/sql-adapter';
 import { PersonModel } from 'src/app/shared/models';
+import { MatSliderDragEvent } from '@angular/material/slider';
 
 @Component({
   selector: 'pages-person_details',
@@ -46,10 +47,18 @@ export class PersonDetailsPageComponent implements OnInit {
     window.location.href = `https://wa.me/${phoneNumber}`;
   }
 
+  enableCallTrigger = false;
+
+  sliderDragged(event: any) {
+    const value = (event.target as HTMLInputElement).valueAsNumber;
+
+    if (value === 100) this.enableCallTrigger = true;
+    else this.enableCallTrigger = false;
+  }
+
   async trioDuel(user: PersonModel) {
     try {
-      let sw = await navigator.serviceWorker.ready;
-
+      await navigator.serviceWorker.ready;
       await this._adapter.sendNotification({
         targetUserId: this._curretUserIdForNotif,
         title: 'Hello!',

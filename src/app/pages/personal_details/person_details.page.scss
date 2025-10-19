@@ -30,7 +30,8 @@
   }
 
   .details {
-    background-color: #e9e7e7;
+    background: linear-gradient(-45deg, #f1efef, #b3b1b1);
+    border: 1px solid #66636366;
     width: 100%;
     height: 70%;
     margin-top: -22px;
@@ -60,7 +61,7 @@
         width: 93%;
         height: 93%;
         border-radius: 50%;
-        background-color: red;
+        background-color: white;
       }
     }
 
@@ -68,6 +69,59 @@
       margin-top: 8vh;
       font-size: 2rem;
       font-weight: 600;
+    }
+
+    &__trio__duel {
+      position: relative;
+      width: 60%;
+      height: 20%;
+      margin-top: 2em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      border: 4px solid transparent;
+      border-radius: 8px;
+      padding: 1rem;
+      background: linear-gradient(var(--shade-color-1), var(--shade-color-2));
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: -4px;
+        left: -4px;
+        right: -4px;
+        bottom: -4px;
+        z-index: 1;
+        border-radius: inherit;
+        background: repeating-linear-gradient(
+          45deg,
+          #000,
+          #000 10px,
+          #ffeb3b 10px,
+          #ffeb3b 20px
+        );
+        -webkit-mask: linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        padding: 8px;
+        pointer-events: none;
+      }
+
+      &__button {
+        width: 80%;
+        height: 50%;
+        color: white;
+        font-weight: 600;
+        font-size: 1.2rem;
+        background-color: #121212c7;
+      }
+    }
+
+    &__slider {
+      margin-top: 3em;
+      width: 60%;
     }
 
     footer {

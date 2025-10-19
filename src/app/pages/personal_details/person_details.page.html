@@ -8,7 +8,28 @@
       <img [src]="user.image" alt="user image" class="details__image" />
     </div>
     <span class="details__name">{{ user.name }}</span>
-    <button (click)="trioDuel(user)">TRIO DUEL!</button>
+    <div
+      class="details__trio__duel"
+      [ngStyle]="{'--shade-color-1': enableCallTrigger ? 'rgba(0,0,0,0)' : 'rgba(16,16,16,0.44)',
+      '--shade-color-2': enableCallTrigger ? 'rgba(0,0,0,0)' : 'rgba(27,27,27,0.14)'}"
+    >
+      <button
+        mat-flat-button
+        (click)="trioDuel(user)"
+        class="details__trio__duel__button"
+        [disabled]="!enableCallTrigger"
+      >
+        TRIO DUEL!
+      </button>
+    </div>
+
+    <mat-slider
+      max="100"
+      class="details__slider"
+      (input)="sliderDragged($event)"
+    >
+      <input matSliderThumb />
+    </mat-slider>
 
     <footer>
       <div class="buttons__row">
@@ -17,14 +38,14 @@
           class="buttons__row__call"
           (click)="call(user.phoneNumber)"
         >
-          <mat-icon class="buttons__row__call__icon">call</mat-icon>
+          <mat-icon class="buttons__row__call__icon">tty</mat-icon>
         </button>
         <button
           mat-button
           class="buttons__row__message"
           (click)="message(user.phoneNumber)"
         >
-          <mat-icon class="buttons__row__message__icon">mail</mat-icon>
+          <mat-icon class="buttons__row__message__icon">chat</mat-icon>
           <span class="buttons__row__message__text">Send message</span>
         </button>
       </div>

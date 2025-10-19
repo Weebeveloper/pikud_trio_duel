@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { LoginPageComponent } from './login/login.page';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -24,6 +25,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatInputModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
+    MatSliderModule,
   ],
   exports: [HomePageComponent, PersonDetailsPageComponent, LoginPageComponent],
 })
