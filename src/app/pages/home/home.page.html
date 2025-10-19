@@ -2,15 +2,31 @@
   <ng-container
     *ngIf="hasNotificationsPremission$ | async; else doesntHaveNotifications"
   >
-    <div class="page__container" *ngIf="currentUser$ | async as currentUser">
-      <header
-        class="current__user"
-        [ngStyle]="{'--user-background-color': currentUser.backgroundColor}"
-      >
-        <span>Hello {{ currentUser.name }}</span>
-        <img [src]="currentUser.image" class="current__user__image" />
+    <div class="page__container">
+      <header>
+        <div class="current__user">
+          <ng-container *ngIf="!(isLoading$ | async)">
+            <ng-container *ngIf="currentUser$ | async as currentUser">
+              <span class="welcome__back">Welcome Back</span>
+              <div
+                class="current__user__details"
+                [ngStyle]="{'--user-background-color': currentUser.backgroundColor}"
+              >
+                <span>{{ currentUser.name }}</span>
+                <img
+                  [src]="currentUser.image"
+                  class="current__user__details__image"
+                />
+              </div>
+              <p class="current__user__sentence">
+                Who's privacy shall be discarded today?
+              </p>
+            </ng-container>
+          </ng-container>
+        </div>
       </header>
-      <div class="users">
+
+      <div class="users" *ngIf="!(isLoading$ | async); else load">
         <div
           *ngFor="let user of allUsers$ | async"
           class="user__info"
@@ -27,6 +43,16 @@
           </div>
         </div>
       </div>
+
+      <ng-template #load>
+        <div class="loading">
+          <mat-spinner
+            diameter="100"
+            strokeWidth="5"
+            class="loading__spinner"
+          ></mat-spinner>
+        </div>
+      </ng-template>
     </div>
   </ng-container>
 

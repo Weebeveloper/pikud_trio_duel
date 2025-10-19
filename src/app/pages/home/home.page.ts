@@ -1,6 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, of, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  combineLatestWith,
+  delay,
+  map,
+  of,
+  startWith,
+  tap,
+} from 'rxjs';
 import { PersonModel } from 'src/app/shared/models';
 import { SQLAdapter } from '../api/sql/sql-adapter';
 
@@ -19,6 +28,11 @@ export class HomePageComponent implements OnInit {
 
   readonly hasLocationPremission$ = new BehaviorSubject<boolean>(true);
   readonly hasNotificationsPremission$ = new BehaviorSubject<boolean>(true);
+
+  readonly isLoading$ = combineLatest([this.currentUser$, this.allUsers$]).pipe(
+    map(() => false),
+    startWith(true)
+  );
 
   constructor(
     private readonly _router: Router,
