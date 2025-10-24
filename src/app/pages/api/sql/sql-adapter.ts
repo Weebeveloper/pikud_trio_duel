@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   forkJoin,
@@ -94,8 +94,13 @@ export class SQLAdapter {
 
   fetchLastNotificationTimestamp(userId: string): Observable<Date> {
     const params = new HttpParams().set('userId', userId);
+    const headers = new HttpHeaders({
+      'x-no-cache': 'true',
+    });
+
     return this._http
       .get<any>(`${this.baseUrl}/lastNotificationTimestamp`, {
+        headers,
         params,
       })
       .pipe(map((d) => d.lastNotificationTimestamp));

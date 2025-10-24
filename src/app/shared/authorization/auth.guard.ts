@@ -19,7 +19,10 @@ export class AuthGuard implements CanActivate {
       return of(false);
     }
 
-    const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'x-no-cache': 'true',
+    });
 
     return this._http
       .get<any>(`${this.baseUrl}/verify-token`, { headers })

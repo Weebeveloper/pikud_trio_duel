@@ -19,8 +19,16 @@ export class HomePageComponent implements OnInit {
 
   readonly hasLocationPremission$ = new BehaviorSubject<boolean>(true);
   readonly hasNotificationsPremission$ = new BehaviorSubject<boolean>(true);
+  private readonly _myLocation$ = new BehaviorSubject<{
+    latitude: number;
+    longtitude: number;
+  } | null>(null);
 
-  readonly isLoading$ = combineLatest([this.currentUser$, this.allUsers$]).pipe(
+  readonly isLoading$ = combineLatest([
+    this.currentUser$,
+    this.allUsers$,
+    this._myLocation$,
+  ]).pipe(
     map(() => false),
     startWith(true)
   );
@@ -44,8 +52,6 @@ export class HomePageComponent implements OnInit {
     private readonly _router: Router,
     private readonly _adapter: SQLAdapter
   ) {}
-
-  _myLocation: { latitude: number; longtitude: number } | null = null;
 
   ngOnInit(): void {
     navigator.geolocation.getCurrentPosition(
@@ -92,21 +98,24 @@ export class HomePageComponent implements OnInit {
   }
 
   getDistance(userLatitude: number, userLongtitude: number) {
-    const R = 6371;
-    const dLat = this._degreesToRadians(
-      this._myLocation!.latitude - userLatitude
-    );
-    const dLon = this._degreesToRadians(
-      this._myLocation!.longtitude - userLongtitude
-    );
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(this._degreesToRadians(userLatitude)) *
-        Math.cos(this._degreesToRadians(this._myLocation!.latitude)) *
-        Math.sin(dLon / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distanceKm = R * c;
-    return distanceKm;
+    if (this._myLocation$.value) {
+      const R = 6371;
+      const dLat = this._degreesToRadians(
+        this._myLocation$.value!.latitude - userLatitude
+      );
+      const dLon = this._degreesToRadians(
+        this._myLocation$.value!.longtitude - userLongtitude
+      );
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(this._degreesToRadians(userLatitude)) *
+          Math.cos(this._degreesToRadians(this._myLocation$.value!.latitude)) *
+          Math.sin(dLon / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distanceKm = R * c;
+      return distanceKm;
+    }
+    return 0;
   }
 
   private _degreesToRadians(degrees: number): number {
@@ -114,15 +123,15 @@ export class HomePageComponent implements OnInit {
   }
 
   private _setLocation(position: GeolocationPosition) {
-    this._myLocation = {
+    this._myLocation$.next({
       latitude: position.coords.latitude,
       longtitude: position.coords.longitude,
-    };
+    });
     this.hasLocationPremission$.next(true);
   }
 
   private async _setupNotificationsService() {
-    const swRegistration = await navigator.serviceWorker.register('./sw.js');
+    await navigator.serviceWorker.register('./sw.js');
 
     let sw = await navigator.serviceWorker.ready;
 

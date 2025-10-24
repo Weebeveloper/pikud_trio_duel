@@ -1,10 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import {
   combineLatest,
   map,
   ReplaySubject,
   startWith,
   Subject,
+  Subscription,
   switchMap,
   tap,
 } from 'rxjs';
@@ -12,7 +18,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as L from 'leaflet';
 import { SQLAdapter } from '../api/sql/sql-adapter';
 import { PersonModel } from 'src/app/shared/models';
-import { MatSliderDragEvent } from '@angular/material/slider';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TRIO_DUEL_TIME_PERIOD } from 'src/app/shared/global.vars';
 
@@ -22,13 +27,12 @@ import { TRIO_DUEL_TIME_PERIOD } from 'src/app/shared/global.vars';
   styleUrls: ['./person_details.page.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PersonDetailsPageComponent implements OnInit {
+export class PersonDetailsPageComponent implements OnInit, OnDestroy {
   private _map!: any;
 
   private readonly _currentUserId$ = new ReplaySubject<string>(1);
   readonly currentUser$ = this._currentUserId$.pipe(
-    switchMap((id) => this._adapter.getUserById(id)),
-    tap((user) => this._initMap(user.location))
+    switchMap((id) => this._adapter.getUserById(id))
   );
 
   private readonly _refresh$ = new Subject<void>();
@@ -50,10 +54,26 @@ export class PersonDetailsPageComponent implements OnInit {
     })
   );
 
+  readonly isLoading$ = this.currentUser$.pipe(
+    map(() => false),
+    startWith(true)
+  );
+
+  private readonly _initMap$ = this.currentUser$;
+  private _initMapSubscription$!: Subscription;
+
   ngOnInit(): void {
     this._route.fragment.subscribe((fragment) => {
       this._currentUserId$.next(fragment!);
     });
+
+    this._initMapSubscription$ = this._initMap$.subscribe((user) =>
+      this._initMap(user.location)
+    );
+  }
+
+  ngOnDestroy(): void {
+    this._initMapSubscription$?.unsubscribe();
   }
 
   constructor(

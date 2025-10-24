@@ -6,8 +6,9 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SharedModule } from './shared/shared.module';
 import { PagesModule } from './pages/pages.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { CacheInterceptor } from './shared/cache.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,7 +20,10 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     PagesModule,
     HttpClientModule,
   ],
-  providers: [SharedModule],
+  providers: [
+    SharedModule,
+    { provide: HTTP_INTERCEPTORS, useClass: CacheInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

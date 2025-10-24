@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MockAdapter } from '../api/mock/mock-adapter';
-import { AuthService } from 'src/app/shared/auth.service';
+import { AuthService } from 'src/app/shared/authorization/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, Subject } from 'rxjs';

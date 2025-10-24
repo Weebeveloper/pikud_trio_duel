@@ -18,7 +18,7 @@
     color: gray;
   }
 
-  .map-container {
+  .map__container {
     height: 400px;
     overflow: hidden;
     border-radius: 15px;
@@ -199,6 +199,23 @@
   position: absolute;
   border-radius: unset;
   animation: border-alert 2s ease-in infinite;
+}
+
+.loading {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__spinner {
+    &::ng-deep {
+      circle {
+        stroke: black;
+      }
+    }
+  }
 }
 
 @keyframes border-alert {

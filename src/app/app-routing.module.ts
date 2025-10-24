@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomePageComponent, PersonDetailsPageComponent } from './pages/index';
 import { LoginPageComponent } from './pages/login/login.page';
-import { AuthGuard } from './shared/auth.guard';
+import { AuthGuard } from './shared/authorization/auth.guard';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 const routes: Routes = [

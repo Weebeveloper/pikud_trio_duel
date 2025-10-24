@@ -3,61 +3,73 @@
   [ngClass]="{ 'page__container__alert' : isUnderTrioDuel$ | async }"
 >
   <button mat-button (click)="returnToHome()" class="return__button"><</button>
-  <div class="map-container">
+  <div class="map__container">
     <div id="map"></div>
   </div>
   <div class="details" *ngIf="currentUser$ | async as user">
-    <div class="details__image__container">
-      <img [src]="user.image" alt="user image" class="details__image" />
-    </div>
-    <span class="details__name">{{ user.name }}</span>
+    <ng-container *ngIf="!(isLoading$ | async); else load">
+      <div class="details__image__container">
+        <img [src]="user.image" alt="user image" class="details__image" />
+      </div>
+      <span class="details__name">{{ user.name }}</span>
 
-    <ng-container *ngIf="!(isUnderTrioDuel$ | async); else underTrioDuel">
-      <div
-        class="details__trio__duel"
-        [ngStyle]="{'--shade-color-1': enableCallTrigger ? 'rgba(0,0,0,0)' : 'rgba(16,16,16,0.44)',
+      <ng-container *ngIf="!(isUnderTrioDuel$ | async); else underTrioDuel">
+        <div
+          class="details__trio__duel"
+          [ngStyle]="{'--shade-color-1': enableCallTrigger ? 'rgba(0,0,0,0)' : 'rgba(16,16,16,0.44)',
         '--shade-color-2': enableCallTrigger ? 'rgba(0,0,0,0)' : 'rgba(27,27,27,0.14)'}"
-      >
-        <button
-          mat-flat-button
-          (click)="trioDuel(user)"
-          class="details__trio__duel__button"
-          [disabled]="!enableCallTrigger"
         >
-          TRIO DUEL!
-        </button>
-      </div>
+          <button
+            mat-flat-button
+            (click)="trioDuel(user)"
+            class="details__trio__duel__button"
+            [disabled]="!enableCallTrigger"
+          >
+            TRIO DUEL!
+          </button>
+        </div>
 
-      <mat-slider
-        max="100"
-        class="details__slider"
-        (input)="sliderDragged($event)"
-      >
-        <input matSliderThumb />
-      </mat-slider>
+        <mat-slider
+          max="100"
+          class="details__slider"
+          (input)="sliderDragged($event)"
+        >
+          <input matSliderThumb />
+        </mat-slider>
+      </ng-container>
+      <ng-template #underTrioDuel>
+        <div class="under__trioduel">Currently under Trio Duel</div>
+      </ng-template>
+
+      <footer>
+        <div class="buttons__row">
+          <button
+            mat-button
+            class="buttons__row__call"
+            (click)="call(user.phoneNumber)"
+          >
+            <mat-icon class="buttons__row__call__icon">tty</mat-icon>
+          </button>
+          <button
+            mat-button
+            class="buttons__row__message"
+            (click)="message(user.phoneNumber)"
+          >
+            <mat-icon class="buttons__row__message__icon">chat</mat-icon>
+            <span class="buttons__row__message__text">Send message</span>
+          </button>
+        </div>
+      </footer>
     </ng-container>
-    <ng-template #underTrioDuel>
-      <div class="under__trioduel">Currently under Trio Duel</div>
-    </ng-template>
-
-    <footer>
-      <div class="buttons__row">
-        <button
-          mat-button
-          class="buttons__row__call"
-          (click)="call(user.phoneNumber)"
-        >
-          <mat-icon class="buttons__row__call__icon">tty</mat-icon>
-        </button>
-        <button
-          mat-button
-          class="buttons__row__message"
-          (click)="message(user.phoneNumber)"
-        >
-          <mat-icon class="buttons__row__message__icon">chat</mat-icon>
-          <span class="buttons__row__message__text">Send message</span>
-        </button>
-      </div>
-    </footer>
   </div>
 </div>
+
+<ng-template #load>
+  <div class="loading">
+    <mat-spinner
+      diameter="100"
+      strokeWidth="5"
+      class="loading__spinner"
+    ></mat-spinner>
+  </div>
+</ng-template>
