@@ -13,15 +13,15 @@
 
     <form class="details__form" [formGroup]="filters" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="fill" class="details__form__field">
-        <mat-label>Name</mat-label>
+        <mat-label>Email</mat-label>
         <input
           matInput
           maxlength="25"
           formControlName="name"
-          placeholder="Enter your name"
+          placeholder="Enter your email"
         />
         <mat-error *ngIf="filters.get('name')?.hasError('required')">
-          Name is required
+          Email is required
         </mat-error>
       </mat-form-field>
 
