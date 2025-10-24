@@ -60,8 +60,6 @@ export class HomePageComponent implements OnInit {
       }
     );
 
-    this._setupNotificationsService();
-
     this.askForNotificationsPremission();
   }
 
@@ -89,6 +87,7 @@ export class HomePageComponent implements OnInit {
       this.hasNotificationsPremission$.next(false);
     else {
       this.hasNotificationsPremission$.next(true);
+      this._setupNotificationsService();
     }
   }
 
