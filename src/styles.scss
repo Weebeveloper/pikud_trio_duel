@@ -45,12 +45,13 @@ body {
   height: 100vh;
   max-height: 100vh;
   width: 100vw;
-}
-
-body {
   margin: 0;
   background-color: white;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: Inter !important;
+}
+
+*:not(mat-icon) {
+  font-family: Inter !important;
 }
 
 .center-snackbar {
