@@ -28,18 +28,15 @@ export class HomePageComponent implements OnInit {
   readonly isUnderTrioDuel$ = this._adapter
     .fetchLastNotificationTimestamp(this._currnetUserID)
     .pipe(
-      map((timestamp) => {
-        const lastNotificationDate = new Date(
-          String(timestamp).replace(' ', 'T')
-        );
-
-        const periodMinutes = TRIO_DUEL_TIME_PERIOD;
+      map((timestampString) => {
         const now = new Date();
-        const diffMinutes =
-          (now.getTime() - lastNotificationDate.getTime()) / 1000 / 60;
-        const isWithinWindow = diffMinutes <= periodMinutes;
+        const timestamp = new Date(timestampString);
 
-        return isWithinWindow;
+        const diffMs = now.getTime() - timestamp.getTime();
+        const diffHours = diffMs / (1000 * 60 * TRIO_DUEL_TIME_PERIOD);
+
+        const isInTrioDuel = diffHours <= 1;
+        return isInTrioDuel;
       })
     );
 
