@@ -45,21 +45,6 @@
       align-items: center;
       gap: 0.5em;
 
-      .history__button {
-        position: absolute;
-        right: 0.5em;
-        border-radius: 50%;
-        z-index: 1000;
-        width: 2em;
-        height: 2em;
-        font-size: 1.5rem;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-      }
-
       &__details {
         width: 80%;
         border: 2px solid var(--user-background-color);
@@ -82,6 +67,22 @@
           width: 3em;
           aspect-ratio: 1;
         }
+      }
+
+      .history__button {
+        position: absolute;
+        right: 0;
+        top: 25%;
+        border-radius: 50%;
+        z-index: 1000;
+        width: 2em;
+        height: 2em;
+        font-size: 1.5rem;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
       }
 
       &__sentence {

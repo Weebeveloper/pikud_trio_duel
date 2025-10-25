@@ -17,13 +17,6 @@
                 {{ (isUnderTrioDuel$ | async) ? 'You are currently under
                 invasion' : 'Welcome Back' }}
               </span>
-              <button
-                mat-icon-button
-                (click)="navigateToHistory()"
-                class="history__button"
-              >
-                <mat-icon>history_edu</mat-icon>
-              </button>
               <div
                 class="current__user__details"
                 [ngStyle]="{'--user-background-color': currentUser.backgroundColor}"
@@ -34,6 +27,13 @@
                   class="current__user__details__image"
                 />
               </div>
+              <button
+                mat-icon-button
+                (click)="navigateToHistory()"
+                class="history__button"
+              >
+                <mat-icon>history_edu</mat-icon>
+              </button>
               <p class="current__user__sentence">
                 Who's privacy shall be discarded today?
               </p>
