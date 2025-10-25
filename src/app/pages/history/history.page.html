@@ -1,0 +1,51 @@
+<div class="page__container">
+  <div class="content">
+    <button mat-button (click)="returnToHome()" class="return__button">
+      <
+    </button>
+    <h2 class="title" *ngIf="!(isLoading$ | async); else load">History</h2>
+
+    <div class="notifications">
+      <div
+        *ngFor="let user of allNotifications$ | async"
+        class="notifications__info"
+      >
+        <span class="notifications__info__timestamp"
+          >{{ user.alert_timestamp | date:'dd/MM/yy, HH:mm a' }}</span
+        >
+
+        <div class="users">
+          <div class="user">
+            <img [src]="user.receiver.image" class="user__image" />
+            <span
+              [ngStyle]="{'--user-border-color': user.receiver.backgroundColor}"
+              class="user__name"
+              >{{ user.receiver.name }}</span
+            >
+          </div>
+
+          <p class="users__paragraph">was raided by</p>
+
+          <div class="user">
+            <img [src]="user.sender.image" class="user__image" />
+            <span
+              [ngStyle]="{'--user-border-color': user.sender.backgroundColor}"
+              class="user__name"
+              >{{ user.sender.name }}</span
+            >
+          </div>
+        </div>
+        <div class="divider"></div>
+      </div>
+    </div>
+  </div>
+  <ng-template #load>
+    <div class="loading">
+      <mat-spinner
+        diameter="100"
+        strokeWidth="5"
+        class="loading__spinner"
+      ></mat-spinner>
+    </div>
+  </ng-template>
+</div>

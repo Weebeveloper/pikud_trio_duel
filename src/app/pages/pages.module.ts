@@ -10,12 +10,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HistoryPageComponent } from './history/history.page';
 
 @NgModule({
   declarations: [
     HomePageComponent,
     PersonDetailsPageComponent,
     LoginPageComponent,
+    HistoryPageComponent,
   ],
   imports: [
     BrowserModule,

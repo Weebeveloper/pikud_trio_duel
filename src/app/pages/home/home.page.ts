@@ -73,6 +73,10 @@ export class HomePageComponent implements OnInit {
     this._router.navigate(['/details'], { fragment: String(userId) });
   }
 
+  navigateToHistory() {
+    this._router.navigate(['/history']);
+  }
+
   redirectToEnableLocation() {
     navigator.geolocation.getCurrentPosition(
       (position) => {

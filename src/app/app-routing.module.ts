@@ -4,6 +4,7 @@ import { HomePageComponent, PersonDetailsPageComponent } from './pages/index';
 import { LoginPageComponent } from './pages/login/login.page';
 import { AuthGuard } from './shared/authorization/auth.guard';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { HistoryPageComponent } from './pages/history/history.page';
 
 const routes: Routes = [
   {
@@ -24,6 +25,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginPageComponent,
+  },
+  {
+    path: 'history',
+    component: HistoryPageComponent,
   },
   {
     path: '**',

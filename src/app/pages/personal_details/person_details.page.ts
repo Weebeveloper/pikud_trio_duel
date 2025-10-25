@@ -107,7 +107,10 @@ export class PersonDetailsPageComponent implements OnInit, OnDestroy {
   async trioDuel(user: PersonModel) {
     try {
       await navigator.serviceWorker.ready;
+
+      const connectedUserId = JSON.parse(localStorage.getItem('userId')!).id;
       await this._adapter.sendNotification({
+        senderUserId: connectedUserId,
         targetUserId: user.id,
         title: 'Hello!',
         message: 'You are successfully subscribed!',

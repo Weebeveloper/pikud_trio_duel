@@ -1,16 +1,18 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  firstValueFrom,
   forkJoin,
   from,
   map,
   mergeMap,
   Observable,
   of,
+  switchMap,
   tap,
   Timestamp,
 } from 'rxjs';
-import { PersonModel } from 'src/app/shared/models';
+import { AlertHistoryModel, PersonModel } from 'src/app/shared/models';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -83,10 +85,12 @@ export class SQLAdapter {
   }
 
   sendNotification(payload: {
+    senderUserId: string;
     targetUserId: string;
     title: string;
     message: string;
   }) {
+    console.log(payload);
     return this._http
       .post(`${this.baseUrl}/sendNotification`, payload)
       .toPromise();
@@ -104,5 +108,38 @@ export class SQLAdapter {
         params,
       })
       .pipe(map((d) => d.lastNotificationTimestamp));
+  }
+
+  notificationHistory(): Observable<AlertHistoryModel[]> {
+    const headers = new HttpHeaders({
+      'x-no-cache': 'true',
+    });
+
+    return this._http
+      .get<any>(`${this.baseUrl}/notificationHistory`, {
+        headers,
+      })
+      .pipe(
+        switchMap((data: any[]) =>
+          forkJoin(
+            data.map((item) =>
+              forkJoin({
+                alert_timestamp: of(item.alertTimestamp),
+                receiver: this.getUserById(item.receiverId),
+                sender: this.getUserById(item.senderId),
+              }).pipe(
+                map(
+                  ({ alert_timestamp, receiver, sender }) =>
+                    ({
+                      alert_timestamp,
+                      receiver,
+                      sender,
+                    } as AlertHistoryModel)
+                )
+              )
+            )
+          )
+        )
+      );
   }
 }
